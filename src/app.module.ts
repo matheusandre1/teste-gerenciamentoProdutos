@@ -5,7 +5,8 @@ import { ProductsModule } from './products/products.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb://admin:password@127.0.0.1:27017/agilstore?authSource=admin',
+      process.env.MONGO_URI ||
+        'mongodb://admin:password@127.0.0.1:27017/agilstore?authSource=admin',
     ),
     ProductsModule,
   ],

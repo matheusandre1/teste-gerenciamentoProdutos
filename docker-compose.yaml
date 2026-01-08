@@ -11,5 +11,17 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  api:
+    build:
+      context: .
+      target: production
+    container_name: agilstore-api
+    ports:
+      - '3000:3000'
+    environment:
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/agilstore?authSource=admin
+    depends_on:
+      - mongodb
+
 volumes:
   mongodb_data:
