@@ -5,48 +5,51 @@ import { Product, ProductDocument } from './schemas/product.schema';
 
 @Injectable()
 export class ProductsRepository {
-    constructor(
-        @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-    ) { }
+  constructor(
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+  ) {}
 
-    async create(createProductDto: Partial<Product>): Promise<ProductDocument> {
-        const product = new this.productModel(createProductDto);
-        return product.save();
+  async create(createProductDto: Partial<Product>): Promise<ProductDocument> {
+    const product = new this.productModel(createProductDto);
+    return product.save();
+  }
+
+  async findAll(
+    filter: { category?: string } = {},
+    sort: { [key: string]: 'asc' | 'desc' } = {},
+  ): Promise<ProductDocument[]> {
+    const findQuery: any = {};
+
+    if (filter.category) {
+      findQuery.category = filter.category;
     }
 
-    async findAll(
-        filter: { category?: string } = {},
-        sort: { [key: string]: 'asc' | 'desc' } = {},
-    ): Promise<ProductDocument[]> {
-        const findQuery: any = {};
+    return this.productModel.find(findQuery).sort(sort).exec();
+  }
 
-        if (filter.category) {
-            findQuery.category = filter.category;
-        }
+  async findById(id: string): Promise<ProductDocument | null> {
+    return this.productModel.findById(id).exec();
+  }
 
-        return this.productModel.find(findQuery).sort(sort).exec();
-    }
+  async findByName(name: string): Promise<ProductDocument[]> {
+    return this.productModel
+      .find({ name: { $regex: name, $options: 'i' } })
+      .exec();
+  }
 
-    async findById(id: string): Promise<ProductDocument | null> {
-        return this.productModel.findById(id).exec();
-    }
+  async update(
+    id: string,
+    updateProductDto: Partial<Product>,
+  ): Promise<ProductDocument | null> {
+    return this.productModel
+      .findByIdAndUpdate(id, updateProductDto, {
+        new: true,
+        runValidators: true,
+      })
+      .exec();
+  }
 
-    async findByName(name: string): Promise<ProductDocument[]> {
-        return this.productModel
-            .find({ name: { $regex: name, $options: 'i' } })
-            .exec();
-    }
-
-    async update(
-        id: string,
-        updateProductDto: Partial<Product>,
-    ): Promise<ProductDocument | null> {
-        return this.productModel
-            .findByIdAndUpdate(id, updateProductDto, { new: true, runValidators: true })
-            .exec();
-    }
-
-    async delete(id: string): Promise<ProductDocument | null> {
-        return this.productModel.findByIdAndDelete(id).exec();
-    }
+  async delete(id: string): Promise<ProductDocument | null> {
+    return this.productModel.findByIdAndDelete(id).exec();
+  }
 }
