@@ -62,7 +62,7 @@ describe('ProductsController (e2e)', () => {
       .get('/products/Test%20Smartphone')
       .expect(200);
 
-    // If only one product matches, it returns the object; if multiple, it returns an array
+
     const product = Array.isArray(response.body)
       ? response.body[0]
       : response.body;
@@ -84,7 +84,6 @@ describe('ProductsController (e2e)', () => {
       .delete(`/products/${createdProductId}`)
       .expect(200);
 
-    // Verify it's gone
     await request(app.getHttpServer())
       .get(`/products/${createdProductId}`)
       .expect(404);
