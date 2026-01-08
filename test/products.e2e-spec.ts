@@ -62,7 +62,6 @@ describe('ProductsController (e2e)', () => {
       .get('/products/Test%20Smartphone')
       .expect(200);
 
-
     const product = Array.isArray(response.body)
       ? response.body[0]
       : response.body;
