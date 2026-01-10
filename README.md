@@ -78,5 +78,3 @@ Este projeto utiliza um `Dockerfile` multi-stage para otimizar o tamanho da imag
 2.  **Production Stage**: Copia apenas o código transpilado e as dependências necessárias para execução.
 
 ---
-
-Desenvolvido por **Antigravity AI**.
